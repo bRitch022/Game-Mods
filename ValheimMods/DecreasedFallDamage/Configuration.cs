@@ -29,6 +29,14 @@ namespace Decreased_Fall_Damage
 			}
 		}
 
+		public static int minFallHeight
+		{
+			get
+			{
+				return Configuration._minFallHeight.Value;
+			}
+		}
+
 		// Token: 0x06000006 RID: 6 RVA: 0x00002154 File Offset: 0x00000354
 		public static void InitConfiguration()
 		{
@@ -47,6 +55,7 @@ namespace Decreased_Fall_Damage
 			Configuration._configFile = new ConfigFile(Path.Combine(Paths.ConfigPath,"ritchmods.valheim.decreasedfalldamage.cfg"), true);
 			Configuration._enable = Configuration._configFile.Bind<bool>("General", "enable", true, "Description : Enable / disable the mod" + Environment.NewLine + "Values : true; false");
 			Configuration._fallDamage = Configuration._configFile.Bind<int>("General", "fallDamage", 1, "Description : Fall damage rate. Default : 1" + Environment.NewLine + "Values : 0 - 100");
+			Configuration._minFallHeight = Configuration._configFile.Bind<int>("General", "minFallheight", 4, "Description : Height at which fall damage occurs. Default : 1" + Environment.NewLine + "Values : 1 - 100");
 		}
 
 		// Token: 0x06000008 RID: 8 RVA: 0x000022D8 File Offset: 0x000004D8
@@ -67,6 +76,14 @@ namespace Decreased_Fall_Damage
 #endif
 				Configuration._fallDamage.Value = 0;
 			}
+
+			if (Configuration._minFallHeight.Value < 1 || Configuration._minFallHeight.Value > 100)
+			{
+#if DEBUG
+				DecreasedFallDamage.Logger.LogWarning("Config \"fallDamage\" was reset to default : 0 (before " + Configuration._fallDamage.Value.ToString() + ")");
+#endif
+				Configuration._fallDamage.Value = 4;
+			}
 		}
 
 		// Token: 0x04000001 RID: 1
@@ -77,6 +94,8 @@ namespace Decreased_Fall_Damage
 
 		// Token: 0x04000003 RID: 3
 		private static ConfigEntry<int> _fallDamage;
+
+		private static ConfigEntry<int> _minFallHeight;
 	}
 }
 
