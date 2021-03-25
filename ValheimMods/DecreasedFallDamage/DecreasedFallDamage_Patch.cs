@@ -18,9 +18,11 @@ namespace Decreased_Fall_Damage
 			List<CodeInstruction> list = instructions.ToList<CodeInstruction>();
 			for (int i = 0; i < list.Count; i++)
 			{
-				bool flag = list[i].opcode == OpCodes.Ldc_R4 && object.Equals(list[i].operand, 100f);
-				if (flag)
+				if (list[i].opcode == OpCodes.Ldc_R4 && object.Equals(list[i].operand, 100f))
 				{
+#if DEBUG
+					DecreasedFallDamage.Logger.LogWarning("[DEBUG] Patching...");
+#endif
 					list[i] = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DecreasedFallDamage_Patch), "GetMaxFallDamage", null, null));
 					break;
 				}
