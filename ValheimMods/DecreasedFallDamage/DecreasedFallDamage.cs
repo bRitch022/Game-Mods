@@ -6,7 +6,7 @@ using HarmonyLib;
 namespace Decreased_Fall_Damage
 {
 	// Token: 0x02000004 RID: 4
-	[BepInPlugin("bRitch02.valheim.DecreasedFallDamage", "Decreased Fall Damage", "1.0.0")]
+	[BepInPlugin(pluginGuid, pluginName, pluginVersion)]
 	[BepInProcess("valheim.exe")]
 	public class DecreasedFallDamage : BaseUnityPlugin
 	{
@@ -15,34 +15,31 @@ namespace Decreased_Fall_Damage
 		{
 			BepInEx.Logging.Logger.Sources.Add(DecreasedFallDamage.Logger);
 			Configuration.InitConfiguration();
-			bool enable = Configuration.Enable;
-			bool flag = enable;
-			if (flag)
+
+			if (Configuration.Enable)
 			{
+#if DEBUG
 				DecreasedFallDamage.Logger.LogWarning("[DEBUG] Patching...");
+#endif
 				new Harmony("bRitch02.valheim.DecreasedFallDamage").PatchAll();
-				DecreasedFallDamage.Logger.LogWarning("[DEBUG] Done Patching...");
 			}
 			else
 			{
-				bool flag2 = !Configuration.Enable && Configuration.Debug;
-				bool flag3 = flag2;
-				if (flag3)
+				if (!Configuration.Enable)
 				{
 					DecreasedFallDamage.Logger.LogWarning("[DEBUG] Mod disable, patch skipped.");
 				}
 			}
-			DecreasedFallDamage.Logger.LogInfo("Successfully loaded DecreasedFallDamage " + "1.0.0".ToString());
 		}
 
 		// Token: 0x04000005 RID: 5
-		public const string pluginGuid = "bRitch02.valheim.DecreasedFallDamage";
+		public const string pluginGuid = "ritchmods.valheim.DecreasedFallDamage";
 
 		// Token: 0x04000006 RID: 6
 		public const string pluginName = "Decreased Fall Damage";
 
 		// Token: 0x04000007 RID: 7
-		public const string pluginVersion = "1.0.0";
+		public const string pluginVersion = "1.0.1";
 
 		// Token: 0x04000008 RID: 8
 		public new static ManualLogSource Logger = new ManualLogSource("Decreased Fall Damage");
