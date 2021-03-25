@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
+using UnityEngine;
 
 namespace Decreased_Fall_Damage
 {
@@ -24,7 +25,18 @@ namespace Decreased_Fall_Damage
 					DecreasedFallDamage.Logger.LogWarning("[DEBUG] Patching...");
 #endif
 					list[i] = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DecreasedFallDamage_Patch), "GetMaxFallDamage", null, null));
-					break;
+				}
+
+				else if (
+					list[i].opcode == OpCodes.Ldloc_0 &&
+					list[i + 1].opcode == OpCodes.Ldc_R4 &&
+					object.Equals(list[i + 1].operand, 4f))
+				{
+#if DEBUG
+					DecreasedFallDamage.Logger.LogWarning("[DEBUG] Patching Next...");
+#endif
+					list[i + 1] = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(DecreasedFallDamage_Patch), "GetMinFallHeight", null, null));
+
 				}
 			}
 			return list;
@@ -35,6 +47,12 @@ namespace Decreased_Fall_Damage
 		{
 			return (float)Configuration.fallDamage;
 		}
+
+		private static float GetMinFallHeight()
+		{
+			return (float)Configuration.minFallHeight;
+		}
+
 	}
 }
 
